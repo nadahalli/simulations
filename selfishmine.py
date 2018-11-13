@@ -4,12 +4,11 @@ import random
 logging = False
 
 num_miners = 100
-selfish_miner_ratio = 0.33
+alpha = 0.33
 gamma = 0.5
 
-def selfish_mine(num_miners, selfish_miner_ratio, gamma):
-    num_selfish_miners = int(selfish_miner_ratio * num_miners)
-    num_honest_miners = num_miners - num_selfish_miners
+def selfish_mine(num_miners, alpha, gamma):
+    num_selfish_miners = int(alpha * num_miners)
 
     selfish_miners = set([i for i in range(0, num_selfish_miners)])
     honest_miners = set([i for i in range(num_selfish_miners, num_miners)])
@@ -71,16 +70,16 @@ def selfish_mine(num_miners, selfish_miner_ratio, gamma):
     return selfish_count * 1.0/total_count, honest_count * 1.0/total_count, total_count
 
 num_trials = 100
-for selfish_miner_ratio in [0.2, 0.3, 0.4, 0.5, 0.6]:
+for alpha in [0.2, 0.3, 0.4, 0.5, 0.6]:
     selfish_total = 0
     honest_total = 0
     total_total = 0
     for i in range(num_trials):
-        selfish_count, honest_count, total_count = selfish_mine(num_miners, selfish_miner_ratio, gamma)
+        selfish_count, honest_count, total_count = selfish_mine(num_miners, alpha, gamma)
         selfish_total += selfish_count
         honest_total += honest_count
         total_total += total_count
-    print selfish_miner_ratio, selfish_total * 1.0/num_trials, honest_total * 1.0/num_trials, total_total * 1.0/num_trials
+    print alpha, selfish_total * 1.0/num_trials, honest_total * 1.0/num_trials, total_total * 1.0/num_trials
         
                 
 
