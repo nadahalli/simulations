@@ -4,8 +4,6 @@ import random
 logging = False
 
 num_miners = 100
-alpha = 0.33
-gamma = 0.5
 
 def selfish_mine(num_miners, alpha, gamma):
     num_selfish_miners = int(alpha * num_miners)
@@ -52,9 +50,11 @@ def selfish_mine(num_miners, alpha, gamma):
                 public_blockchain = list(private_blockchain)
                 private_branch_length = 0
             else:
-                if logging: print  'honest and delta > 2'
-                public_blockchain.append(private_blockchain[0])
-                private_blockchain.pop(0)
+                if logging: print 'honest and delta > 2'
+                public_blockchain.pop(len(public_blockchain) - 1)
+                public_blockchain.append(private_blockchain[len(private_blockchain) - delta])
+                public_blockchain.append(private_blockchain[len(private_blockchain) - delta + 1])
+                private_branch_length = private_branch_length - 2
         if logging: print '-' * 10
 
     selfish_count = 0
@@ -70,7 +70,9 @@ def selfish_mine(num_miners, alpha, gamma):
     return selfish_count * 1.0/total_count, honest_count * 1.0/total_count, total_count
 
 num_trials = 100
-for alpha in [0.2, 0.3, 0.4, 0.5, 0.6]:
+gamma = 0.5
+for alpha in [0.2, 0.24, 0.25, 0.26, 0.3, 0.33, 0.34, 0.4, 0.5, 0.6]:
+#for alpha in [0.5]:
     selfish_total = 0
     honest_total = 0
     total_total = 0
