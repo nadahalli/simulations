@@ -72,7 +72,6 @@ def selfish_mine(num_miners, alpha, gamma):
 num_trials = 100
 gamma = 0.5
 for alpha in [0.2, 0.24, 0.25, 0.26, 0.3, 0.33, 0.34, 0.4, 0.5, 0.6]:
-#for alpha in [0.5]:
     selfish_total = 0
     honest_total = 0
     total_total = 0
