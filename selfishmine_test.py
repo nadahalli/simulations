@@ -24,24 +24,25 @@ class TestSelfishMine(unittest.TestCase):
                                                  len(chosen_miners),
                                                  alpha,
                                                  gamma,
-                                                 miner_generator(chosen_miners))
+                                                 miner_generator(chosen_miners),
+                                                 False)
         self.assertEquals([1, 1, 1], actual_blockchain)
 
     def test_two(self):
         num_miners = 2
         alpha = 0.5
         gamma = 0.5
-        chosen_miners = [(0, None),
-                         (1, True),
+        chosen_miners = [(1, None),
                          (0, None),
-                         (1, True),
+                         (0, None),
                          (0, None),
                          (1, True)]
         _, _, _, actual_blockchain = selfishmine(num_miners,
                                                  len(chosen_miners),
                                                  alpha,
                                                  gamma,
-                                                 miner_generator(chosen_miners))
+                                                 miner_generator(chosen_miners),
+                                                 True)
         self.assertEquals([1, 1, 1], actual_blockchain)
 
 if __name__ == '__main__':
