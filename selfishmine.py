@@ -87,7 +87,7 @@ def selfishmine(num_miners, num_blocks, alpha, gamma, random_mine_fn, logging):
                 public_blockchain = list(temp_pub_honest_blockchain)
             else:
                 assert(gamma_decision in [True, False])
-                if gamma_decision < gamma:
+                if gamma_decision:
                     if logging: print 'selfish chain wins'
                     public_blockchain = list(temp_pub_selfish_blockchain)
                 else:

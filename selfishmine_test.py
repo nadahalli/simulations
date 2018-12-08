@@ -14,12 +14,12 @@ class TestSelfishMine(unittest.TestCase):
         num_miners = 2
         alpha = 0.5
         gamma = 0.5
-        chosen_miners = [(0, None),
-                         (1, True),
-                         (0, None),
-                         (1, True),
-                         (0, None),
-                         (1, True)]
+        chosen_miners = [(0, True),
+                         (1, False),
+                         (0, True),
+                         (1, False),
+                         (0, True),
+                         (1, False)]
         _, _, _, actual_blockchain = selfishmine(num_miners,
                                                  len(chosen_miners),
                                                  alpha,
@@ -29,21 +29,25 @@ class TestSelfishMine(unittest.TestCase):
         self.assertEquals([1, 1, 1], actual_blockchain)
 
     def test_two(self):
-        num_miners = 2
         alpha = 0.5
         gamma = 0.5
-        chosen_miners = [(1, None),
-                         (0, None),
-                         (0, None),
-                         (0, None),
-                         (1, True)]
+        chosen_miners = [(0, False),
+                         (1, False),
+                         (2, False),
+                         (3, False),
+                         (4, True),
+                         (5, False),
+                         (6, True),
+                         (7, False),
+                         (8, True)]
+        num_miners = len(chosen_miners)
         _, _, _, actual_blockchain = selfishmine(num_miners,
                                                  len(chosen_miners),
                                                  alpha,
                                                  gamma,
                                                  miner_generator(chosen_miners),
                                                  True)
-        self.assertEquals([1, 1, 1], actual_blockchain)
+        self.assertEquals([0, 1, 2, 3, 7, 8], actual_blockchain)
 
 if __name__ == '__main__':
     unittest.main()
