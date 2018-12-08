@@ -23,7 +23,7 @@ def selfishmine(num_miners, num_blocks, alpha, gamma, random_mine_fn, logging):
     for _ in range (num_blocks):
         temp_pub_selfish_blockchain = list(public_blockchain)
         temp_pub_honest_blockchain = list(public_blockchain)
-        winning_miner, gamma_decision = random_mine_fn(num_miners)
+        winning_miner, gamma_decision = random_mine_fn(num_miners, gamma)
         delta = len(private_blockchain) - len(public_blockchain)
         if logging: print 'public_blockchain           =', format_blockchain(public_blockchain)
         if logging: print 'private_blockchain          =', format_blockchain(private_blockchain)
@@ -114,23 +114,23 @@ def selfishmine(num_miners, num_blocks, alpha, gamma, random_mine_fn, logging):
             public_blockchain)
 
 if __name__ == '__main__':
-    logging = True
+    logging = False
     num_trials = 10
     num_miners = 100
     num_blocks = 10000
 
     gamma = 0.5
-    for alpha in [0.5, 0.1, 0.2, 0.3, 0.4, 0.5]:
+    for alpha in [0.25, 0.1, 0.2, 0.3, 0.4, 0.5]:
         selfish_total = 0
         honest_total = 0
         total_total = 0
         for i in range(num_trials):
-            selfish_count, honest_count, total_count = selfish_mine(num_miners,
-                                                                    num_blocks,
-                                                                    alpha,
-                                                                    gamma,
-                                                                    random_mine_fn,
-                                                                    logging)
+            selfish_count, honest_count, total_count, blockchain = selfishmine(num_miners,
+                                                                               num_blocks,
+                                                                               alpha,
+                                                                               gamma,
+                                                                               random_mine_fn,
+                                                                               logging)
             selfish_total += selfish_count
             honest_total += honest_count
             total_total += total_count

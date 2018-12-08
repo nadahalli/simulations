@@ -2,7 +2,7 @@ import unittest
 from selfishmine import selfishmine
 
 def miner_generator(chosen_miners):
-    def miner(_):
+    def miner(_1, _2):
         if 'index' not in miner.__dict__:
             miner.index = -1
         miner.index += 1
