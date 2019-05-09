@@ -50,11 +50,12 @@ if __name__ == '__main__':
     p = 32416190071
     q = 32416188191	
 
-    print p % 4
-    print q % 4
+    assert(p % 4 == 3)
+    assert(q % 4 == 3)
 
     k = 10
     x = 3 ** (2 ** k) % (p*q)
 
     for i in range(1000):
         print check(x - i, p, q)
+
