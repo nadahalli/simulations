@@ -115,12 +115,12 @@ def selfishmine(num_miners, num_blocks, alpha, gamma, random_mine_fn, logging):
 
 if __name__ == '__main__':
     logging = False
-    num_trials = 10
-    num_miners = 100
-    num_blocks = 10000
+    num_trials = 200
+    num_miners = 1000
+    num_blocks = 2000
 
     gamma = 0.5
-    for alpha in [0.25, 0.1, 0.2, 0.3, 0.4, 0.5]:
+    for alpha in [0.1, 0.2, 0.25, 0.3, 0.33, 0.4, 0.5]:
         selfish_total = 0
         honest_total = 0
         total_total = 0
@@ -134,10 +134,11 @@ if __name__ == '__main__':
             selfish_total += selfish_count
             honest_total += honest_count
             total_total += total_count
-        print(alpha,
-              selfish_total * 1.0/num_trials,
-              honest_total * 1.0/num_trials,
-              total_total * 1.0/num_trials)
+        formatting_string = '{0:.3f}'
+        print(formatting_string.format(alpha),
+              formatting_string.format(selfish_total * 1.0/num_trials),
+              formatting_string.format(honest_total * 1.0/num_trials),
+              formatting_string.format(total_total * 1.0/num_trials))
         
                 
 
