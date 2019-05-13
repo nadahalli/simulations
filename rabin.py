@@ -30,12 +30,14 @@ def encrypt_rsa(m, public_key):
 def decrypt_rsa(c, private_key):
     return pow(c, private_key[0], private_key[1])
 
-def test_rsa(n, public_key, private_key):
+def test_rsa(n, public_key, private_key, check = True):
     seed = random.randrange(1, public_key[1])
+    print("RSA Seed: ", seed)
     for i in range(n):
         decrypted = decrypt_rsa(seed, private_key)
-        encrypted = encrypt_rsa(decrypted, public_key)
-        assert(encrypted == seed)
+        if check:
+            encrypted = encrypt_rsa(decrypted, public_key)
+            assert(encrypted == seed)
         seed = decrypted
 
 def sqrt_p_3_mod_4(a, p):
@@ -71,13 +73,15 @@ def fast_x_power_2_power_k(x, k, p, q):
     t = pow(2, k, (p-1)*(q-1))
     return pow(x, t, p*q)
 
-def test_rabin(m, public_key, private_key):
+def test_rabin(m, public_key, private_key, check = True):
     x = random.randint(0, public_key[0])
     seed = fast_x_power_2_power_k(x, m, private_key[0], private_key[1])
+    print("Rabin Seed: ", seed)
     for i in range(m):
         decrypted = decrypt_rabin(seed, private_key)
-        encrypted = encrypt_rabin(decrypted, public_key)
-        assert(encrypted == seed)
+        if check:
+            encrypted = encrypt_rabin(decrypted, public_key)
+            assert(encrypted == seed)
         seed = decrypted
 
 def wrap(f, *args, **kwargs):
@@ -102,12 +106,12 @@ if __name__ == '__main__':
     private_key = [d, n]
     public_key = [e, n]
 
-    print("RSA: ", timeit.timeit(wrap(test_rsa, 10000, public_key, private_key), number=2))
+    print("RSA: ", timeit.timeit(wrap(test_rsa, 10000, public_key, private_key, check = False), number=20))
 
     private_key = [p, q, p*q]
     public_key = [p*q]
 
-    print("RABIN: ", timeit.timeit(wrap(test_rabin, 10000, public_key, private_key), number=2))
+    print("RABIN: ", timeit.timeit(wrap(test_rabin, 10000, public_key, private_key, check = False), number=20))
 
     
 
