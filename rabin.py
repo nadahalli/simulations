@@ -86,8 +86,8 @@ def wrap(f, *args, **kwargs):
     return wrapped
 
 if __name__ == '__main__':
-    p = 32416190071
-    q = 32416188191
+    p = 298840311595359989218162782863818299419
+    q = 257876331596501287971460799759063789759
     n = p * q
     phi = (p-1) * (q-1)/gcd(p-1, q-1)
 
@@ -102,12 +102,12 @@ if __name__ == '__main__':
     private_key = [d, n]
     public_key = [e, n]
 
-    print("RSA: ", timeit.timeit(wrap(test_rsa, 10000, public_key, private_key), number=20))
+    print("RSA: ", timeit.timeit(wrap(test_rsa, 10000, public_key, private_key), number=2))
 
     private_key = [p, q, p*q]
     public_key = [p*q]
 
-    print("RABIN: ", timeit.timeit(wrap(test_rabin, 10000, public_key, private_key), number=20))
+    print("RABIN: ", timeit.timeit(wrap(test_rabin, 10000, public_key, private_key), number=2))
 
     
 
