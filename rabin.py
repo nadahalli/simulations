@@ -69,6 +69,13 @@ def decrypt_rabin(m, private_key):
 
     return lst[0]
 
+def generate_rabin(x, i, private_key):
+    p = private_key[0]
+    q = private_key[1]
+    n = private_key[2]
+    tot = private_key[3]
+    return pow(x, pow(2, i, tot), n)
+
 def fast_x_power_2_power_k(x, k, p, q):
     t = pow(2, k, (p-1)*(q-1))
     return pow(x, t, p*q)
@@ -84,6 +91,16 @@ def test_rabin(m, public_key, private_key, check = True):
             assert(encrypted == seed)
         seed = decrypted
 
+def test_rabin_series(m, public_key, private_key, check = True):
+    x = random.randint(0, public_key[0])
+    print("Rabin Series Seed: ", x)
+    for i in range(m):
+        decrypted = generate_rabin(x, m - i, private_key)
+        if check:
+            encrypted_using_series = generate_rabin(x, m - i + 1, private_key)
+            encrypted_using_standard = encrypt_rabin(decrypted, public_key)
+            assert(encrypted_using_standard == encrypted_using_series)
+        
 def wrap(f, *args, **kwargs):
     def wrapped():
         return f(*args, **kwargs)
@@ -106,12 +123,13 @@ if __name__ == '__main__':
     private_key = [d, n]
     public_key = [e, n]
 
-    print("RSA: ", timeit.timeit(wrap(test_rsa, 10000, public_key, private_key, check = False), number=20))
+    print("RSA: ", timeit.timeit(wrap(test_rsa, 10000, public_key, private_key, check = False), number=2))
 
-    private_key = [p, q, p*q]
+    private_key = [p, q, p*q, (p-1) * (q-1)]
     public_key = [p*q]
 
-    print("RABIN: ", timeit.timeit(wrap(test_rabin, 10000, public_key, private_key, check = False), number=20))
+    print("RABIN: ", timeit.timeit(wrap(test_rabin, 10000, public_key, private_key, check = False), number=2))
+    print("RABIN SERIES: ", timeit.timeit(wrap(test_rabin_series, 10000, public_key, private_key, check = False), number=2))
 
     
 
