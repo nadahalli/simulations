@@ -48,9 +48,9 @@ def encrypt_rabin(m, public_key):
     return pow(m, 2, public_key[0])
 
 def decrypt_rabin(m, private_key):
-    p = private_key[0]
-    q = private_key[1]
-    n = private_key[2]
+    p = private_key['p']
+    q = private_key['q']
+    n = private_key['n']
     
     r, s = 0, 0
     if p % 4 == 3:
@@ -75,13 +75,12 @@ def generate_rabin(x, i, private_key):
     n = private_key['n']
     tot = private_key['tot']
     power = pow(2, i, tot)
-    print("Generate: ", power)
     return pow(x, pow(2, i, tot), n)
 
 def test_rabin(m, public_key, private_key, check = True):
     x = random.randint(0, public_key[0])
+    print("Rabin Seed: ", x)
     seed = generate_rabin(x, m, private_key)
-    print("Rabin Seed: ", seed)
     for i in range(m):
         decrypted = decrypt_rabin(seed, private_key)
         if check:
@@ -102,39 +101,26 @@ def test_rabin_series1(m, public_key, private_key, check = True):
 class ReverseRabin:
     def __init__(self, m, private_key):
         self.prev_power = pow(2, m, private_key['tot'])
-        print('Init: ', self.prev_power)
 
     def reverse(self, x, private_key):
         tot = private_key['tot']
         t = private_key['t']
         n = private_key['n']
-        print("Prev power: ", self.prev_power)
         reversed = pow(x, self.prev_power, n)
-        if self.prev_power > tot:
-            self.prev_power = (self.prev_power * t) % tot
-        else:
-            self.prev_power /= 2
+        self.prev_power = (self.prev_power * t) % tot
         return reversed
 
 def test_rabin_series2(m, public_key, private_key, check = True):
-    print("pk: ", private_key)
     rr = ReverseRabin(m , private_key)
     x = random.randint(0, public_key[0])
     print("Rabin Series Seed: ", x)
     end = rr.reverse(x, private_key)
     for i in range(m):
         decrypted = rr.reverse(x, private_key)
-        print('Decrypted:', decrypted)
-        print('         :', generate_rabin(x, m - i - 1, private_key))
         if check:
-            print '1111'
             encrypted_using_series = generate_rabin(x, m - i, private_key)
-            print encrypted_using_series
-            print '2222'
             encrypted_using_standard = encrypt_rabin(decrypted, public_key)
-            print encrypted_using_standard
             assert(encrypted_using_standard == encrypted_using_series)
-        print '-' * 10
 
 def find_k(tot):
     while tot % 2 == 0:
@@ -163,21 +149,19 @@ if __name__ == '__main__':
     private_key = [d, n]
     public_key = [e, n]
 
-    #print("RSA: ", timeit.timeit(wrap(test_rsa, 10000, public_key, private_key, check = False), number=2))
+    print("RSA: ", timeit.timeit(wrap(test_rsa, 10000, public_key, private_key, check = False), number=2))
 
-    p, q = 7, 11
     n = p * q
     tot = (p-1) * (q-1)
     k = find_k(tot)
-    print k
     t = modinv(2, k)
     assert((2 * t) % k == 1)
     private_key = {'p': p, 'q': q, 'n': n, 'tot': tot, 't': t}
     public_key = [n]
 
-    #print("RABIN: ", timeit.timeit(wrap(test_rabin, 10000, public_key, private_key, check = False), number=2))
-    #print("RABIN SERIES1: ", timeit.timeit(wrap(test_rabin_series1, 10000, public_key, private_key, check = False), number=2))
-    print("RABIN SERIES2: ", timeit.timeit(wrap(test_rabin_series2, 10, public_key, private_key, check = True), number=2))
+    print("RABIN: ", timeit.timeit(wrap(test_rabin, 10000, public_key, private_key, check = False), number=2))
+    print("RABIN SERIES1: ", timeit.timeit(wrap(test_rabin_series1, 10000, public_key, private_key, check = False), number=2))
+    print("RABIN SERIES2: ", timeit.timeit(wrap(test_rabin_series2, 10000, public_key, private_key, check = False), number=2))
 
     
 
