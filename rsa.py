@@ -13,13 +13,13 @@ def gcd(a, b):
         b = c
     return a
 
-def egcd(a, b):
-    if a == 0:
-        return b, 0, 1
-    else:
-        g, y, x = egcd(b % a, a)
-        return g, x - (b // a) * y, y
-
+def egcd(b, n):
+    (x0, x1, y0, y1) = (1, 0, 0, 1)
+    while n != 0:
+        (q, b, n) = (b // n, n, b % n)
+        (x0, x1) = (x1, x0 - q * x1)
+        (y0, y1) = (y1, y0 - q * y1)
+    return (b, x0, y0)
 
 def modinv(a, m):
     g, x, y = egcd(a, m)
@@ -39,13 +39,22 @@ def test_rsa(n, public_key, private_key, check = True):
     print("RSA Seed: ", seed)
     for i in range(n):
         decrypted = decrypt_rsa(seed, private_key)
-        print 'decrypted =', decrypted
         if check:
             encrypted = encrypt_rsa(decrypted, public_key)
+            print 'index     =', i
             print 'encrypted =', encrypted
+            print 'decrypted =', decrypted
+            decrypted2 = pow(seed, private_key['d']
             print '-' * 10
             assert(encrypted == seed)
         seed = decrypted
+
+    print '#' * 10
+
+    for i in range(n):
+        e = public_key['e']
+        f = pow(seed, (e - (i % e)) * e, n)
+        print i, f
 
 def wrap(f, *args, **kwargs):
     def wrapped():
@@ -55,6 +64,8 @@ def wrap(f, *args, **kwargs):
 if __name__ == '__main__':
     p = number.getStrongPrime(512)
     q = number.getStrongPrime(512)
+    p = 23
+    q = 11
     n = p * q
     phi = (p-1) * (q-1)/gcd(p-1, q-1)
 
@@ -70,7 +81,7 @@ if __name__ == '__main__':
     private_key = {'d': d, 'n': n}
     public_key = {'e': e, 'n': n}
 
-    print("RSA: ", timeit.timeit(wrap(test_rsa, 10, public_key, private_key, check = True), number=1))
+    print("RSA: ", timeit.timeit(wrap(test_rsa, 20, public_key, private_key, check = True), number=1))
 
     
 
